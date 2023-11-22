@@ -1,0 +1,205 @@
+\documentclass[a4paper,14pt]{article}
+\usepackage[a4paper, mag=1000, left=2.5cm, right=1cm, top=2cm, bottom=2cm, headsep=0.7cm, footskip=1cm]{geometry}
+\usepackage[utf8]{inputenc}
+\usepackage[T2A]{fontenc}
+\usepackage[english,russian]{babel}
+\usepackage{indentfirst}
+%\usepackage[dvipsnames]{xcolor}
+\usepackage[colorlinks]{hyperref}
+\usepackage{amsfonts} 
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage{float}
+
+\DeclareGraphicsExtensions{.png,.jpg}
+
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhead[LE,RO]{\thepage}
+\fancyfoot{}
+
+\usepackage{listings}
+
+\hypersetup{linkcolor=black}
+
+\title{non-linear equations}
+\author{Иван Золин}
+\date{2023}
+\thispagestyle{empty}
+\begin{document}
+	
+	\begin{titlepage}
+		\begin{center}
+			\textsc{
+				Санкт-Петербургский политехнический университет имени Петра Великого \\[5mm]
+				Физико-механический институт\\[2mm]
+				Высшая школа прикладной математики и физики            
+			}   
+			\vfill
+			\textbf{\large
+				Интервальный анализ\\
+				Отчёт по лабораторной работе №1 \\[3mm]
+			}                
+		\end{center}
+		
+		\vfill
+		\hfill
+		\begin{minipage}{0.5\textwidth}
+			Выполнил: \\[2mm]   
+			Студент: Золин Иван \\
+			Группа: 5030102/00201\\
+		\end{minipage}
+		
+		\hfill
+		\begin{minipage}{0.5\textwidth}
+			Принял: \\[2mm]
+			к. ф.-м. н., доцент \\   
+			Баженов Александр Николаевич
+		\end{minipage}
+		
+		\vfill
+		\begin{center}
+			Санкт-Петербург \\2023 г.
+		\end{center}
+	\end{titlepage}
+	
+	\tableofcontents
+	\newpage
+	\listoffigures
+	\newpage
+	\listoftables
+	\newpage
+	
+	\section{Постановка задачи}
+	Пусть дана вещественная матрица (1.1)
+	\begin{equation}\text{mid} A = 
+		\begin{pmatrix}
+			a_{11} & a_{12}\\ 
+			a_{21} & a_{22}
+		\end{pmatrix}
+	\end{equation}
+	и неотрицательное число
+	\begin{equation}
+		\Delta \in [ 0, \min\{a_{ij}, i,j = \overline{1,2}\}]
+	\end{equation}
+	Рассмотрим две матрицы радиусов:
+	\begin{equation}
+		\text{rad}A_1 = \begin{pmatrix}
+			1 & 1\\ 
+			1 & 1
+		\end{pmatrix}, \text{rad}A_2 = \begin{pmatrix}
+		1 & 0\\ 
+		1 & 0
+	\end{pmatrix}
+	\end{equation}
+	Построим интервальную матрицу следующего вида
+	\begin{equation}
+		A = 
+		\begin{pmatrix}
+			[a_{11} - \Delta \cdot A^{(1,1)}_i, a_{11} + \Delta \cdot A^{(1,1)}_i ]  & [a_{12} - \Delta \cdot A^{(1,2)}_i, a_{12} + \Delta \cdot A^{(1,2)}_i ]\\ 
+			[a_{21} - \Delta \cdot A^{(2,1)}_i, a_{21} + \Delta \cdot A^{(2,1)}_i ] & [a_{22} - \Delta \cdot A^{(2,2)}_i, a_{22} + \Delta \cdot A^{(2,2)}_i ]
+		\end{pmatrix}
+	\end{equation}
+	$i=\overline{1,2}$
+	Необходимо найти $\min\{\Delta|0 \in \det A\}$.
+	В целях конкретизации и возможности проверки решения будем использовать следующую матрицу
+	\begin{equation}
+		\text{mid} A = \begin{pmatrix}
+			1.05 & 1\\ 
+			0.95 & 1
+		\end{pmatrix}
+	\end{equation}
+	\section{Теория}
+	Укажем основные арифметические операции для интервалов:
+	\begin{equation}
+		[a, b] + [c, d] = [a+c, b+d]
+	\end{equation}
+	\begin{equation}
+		[a, b] - [c, d] = [a-d, b-c]
+	\end{equation}
+	\begin{equation}
+	    [a, b] \cdot [c, d] = [\min(ac, ad, bc, bd), \max(ac, ad, bc, bd)]
+	\end{equation}
+	\begin{equation}
+	    \frac{[a,b]}{[c,d]}=[\min\Big(\frac{a}{c}, \frac{a}{c}, \frac{b}{c}, \frac{b}{d}\Big), \max\Big(\frac{a}{c}, \frac{a}{d}, \frac{b}{c}, \frac{b}{d}\Big)]
+	\end{equation}
+	\begin{equation}
+	   \text{mid}[a,b] = \frac{1}{2}(a+b)
+	\end{equation}
+	\begin{equation}
+		\text{wid}[a,b] = (b-a)
+	\end{equation}
+	\begin{equation}
+		\text{rad}[a,b] = \frac{1}{2}(b-a)
+	\end{equation}
+	Пусть $\text{mid} A = \{a_{ij} \}_{i,j \in N}$ – точечная вещественная матрица середин, $rad A = \{r_{ij}\}_{i,j \in N}$ – точечная вещественная матрица радиусов. Операцией midrad назовем следующую функцию:
+	\begin{equation}
+		\text{midrad}(\text{mid}A, \text{rad}A) = {[\text{mid}A_{ij} - \text{rad} A_{ij} ], [\text{mid} A_{ij} + \text{rad} A_{ij} ]}_{i,j \in N}
+	\end{equation}
+	Результатом операции является интервальная матрица.
+	\section{Реализация}
+	\subsection{Описание}
+	Данная лабораторная работа была выполнена с использованием языка
+	программирования Python 3.10 в среде разработки PyCharm.
+	Дополнительно был реализован класс Interval, описывающий интервальную арифметику для удобства написания кода. 
+	
+	Отчёт подготовлен с помощью языка LaTEX в редакторе TexStudio.
+	\subsection{Описание алгоритма}
+	\begin{enumerate}
+		\item Проверим вхождение нуля в интервал $\det A$ при максимально допустимом значении.
+		\item Если $0 \notin \det A$, то данная задача не имеет решения. Иначе переходим к шагу 3.
+		\item Если $\det A$ является симметричным интервалом, то минимальное значение $\Delta$ равно 0, так как
+		$0 = $mid$[a, b]$.
+		\item Рассмотрим весь допустимый интервал возможных значений $\Delta$. Методом половинного деления
+		будем сужать его до тех пор, пока не достигнем точности $\varepsilon = 10^{-14}$.
+	\end{enumerate}
+	\subsection{Ссылка на репозиторий}
+	\url{https://github.com/IMZolin/Interval-analysis} \ - GitHub репозиторий
+	
+	\section{Результат}
+	\subsection{Первый случай матрицы радиусов}
+	Действуя согласно описанному алгоритму, мы получаем начальное приближение $\Delta = 0.95$. Далее при-
+	меняем операцию midrad к матрицам mid$A$ и rad$A_1$, получаем интервальную матрицу
+	\begin{equation}
+		\text{mid} A_1 = \begin{pmatrix}
+			[0.1,2] & [0.05,1.95]\\ 
+			[0,1.9] & [0.05,1.95]
+		\end{pmatrix}
+	\end{equation}
+	Проверим вхождение нуля в $\det A_1$:
+	\begin{equation}
+		\det A_1 = [-3.7,3.9]
+	\end{equation}
+	Отсюда видно, что $0 \in \det 1$, а также mid$A_1 \neq 0$ значит, переходим к пункту 4 описанного алгоритма.
+	В результате получаем $\min \Delta \approx 0.025$. В таком случае $\det A_1 = [2.220 · 10^{-16}, 0.2]$. Левый конец $\det A_1$
+	с точностью до машинного эпсилон равен нулю.
+	\subsection{Второй случай матрицы радиусов}
+	Применим операцию midrad теперь к матрицам mid$A_1$ и rad$A_2$ и получим
+	\begin{equation}
+		\text{mid} A_2 = \begin{pmatrix}
+			[0.1,2] & 1\\ 
+			[0,1.9] & 1
+		\end{pmatrix}
+	\end{equation}
+	Проверим вхождение нуля в $\det A_2$:
+	\begin{equation}
+		\det A_2 = [-1.8,2]
+	\end{equation}
+	Вновь видим, что $0 \in \det A_2$, а также mid $A_2 \neq 0$, значит, переходим к пункту 4 алгоритма.
+	В результате получаем $\min \Delta \approx 0.05$. В таком случае $\det A_2 = [1.110 \cdot 10^{-16}, 0.2]$. Левый конец $\det A_2$ с
+	точностью до машинного эпсилон равен нулю.
+	\newpage
+	\addcontentsline{toc}{section}{Литература}
+	
+	\begin{thebibliography}{4}
+		\bibitem{s:hist}
+		Histogram. URL: \url{https://en.wikipedia.org/wiki/Histogram}
+		\bibitem{b:probSectMath}
+		Вероятностные разделы математики. Учебник для бакалавров технических направлений.//Под ред. Максимова Ю.Д. --- Спб.: «Иван Федоров», 2001. --- 592 c., илл.
+		\bibitem{s:boxplot}
+		Box plot. URL: \url{https://en.wikipedia.org/wiki/Box_plot}
+		\bibitem{a:nonParamRegr}
+		Анатольев, Станислав (2009) «Непараметрическая регрессия», Квантиль, №7, стр. 37-52.
+	\end{thebibliography}
+	
+\end{document}

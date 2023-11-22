@@ -1,0 +1,11 @@
+\babel@toc {russian}{}\relax 
+\contentsline {section}{\numberline {1}Постановка задачи}{4}{section.1}%
+\contentsline {section}{\numberline {2}Теория}{4}{section.2}%
+\contentsline {section}{\numberline {3}Реализация}{4}{section.3}%
+\contentsline {subsection}{\numberline {3.1}Описание}{4}{subsection.3.1}%
+\contentsline {subsection}{\numberline {3.2}Описание алгоритма}{4}{subsection.3.2}%
+\contentsline {subsection}{\numberline {3.3}Ссылка на репозиторий}{5}{subsection.3.3}%
+\contentsline {section}{\numberline {4}Результат}{5}{section.4}%
+\contentsline {subsection}{\numberline {4.1}Первый случай матрицы радиусов}{5}{subsection.4.1}%
+\contentsline {subsection}{\numberline {4.2}Второй случай матрицы радиусов}{5}{subsection.4.2}%
+\contentsline {section}{Литература}{6}{equation.4.17}%
