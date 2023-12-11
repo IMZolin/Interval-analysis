@@ -2,6 +2,13 @@ import intvalpy as ip
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib import cm
+import os
+
+
+def save_figure(fig, filename):
+    output_path = os.path.join("pic", filename)
+    fig.savefig(output_path)
+
 
 def line(ax, coefs, res, x, y, mod):
     if coefs[0] == 0 and coefs[1] == 0:
@@ -13,7 +20,7 @@ def line(ax, coefs, res, x, y, mod):
 
 
 def start_linear_system_plot(A, b):
-    colors = ['c', 'y', 'r', 'g']
+    colors = ['g', 'b', 'r', 'c']
     x = np.linspace(-1, 5, 100)
     y = [-0.5, 4]
     fig, ax = plt.subplots()
@@ -23,13 +30,14 @@ def start_linear_system_plot(A, b):
         line(ax, coefs.b, res.b, x, y, color + '-')
 
 
-def linear_system_plot(A, b, title):
+def linear_system_plot(A, b, title, filename):
     start_linear_system_plot(A, b)
     plt.title(title)
     plt.grid()
     plt.xlim(-1, 5)
     plt.ylim(-0.5, 4)
     plt.show()
+    save_figure(plt, filename)
 
 
 def start_tol_plot(A, b, needVe=False):
@@ -53,7 +61,7 @@ def start_tol_plot(A, b, needVe=False):
                 z[i][j] = f
     ax.contour(x, y, z, levels = 0, cmap=cm.hot, linewidths=3)
 
-    colors = ['c', 'y', 'r', 'g']
+    colors = ['g', 'b', 'r', 'c']
     x = np.linspace(-1, 5, 100)
     y = [-0.5, 4]
     for coefs, res, color in zip(A, b, colors):
@@ -61,7 +69,7 @@ def start_tol_plot(A, b, needVe=False):
         line(ax, coefs.a, res.a, x, y, color + '-')
         line(ax, coefs.b, res.b, x, y, color + '-')
 
-    ax.plot(max[1][0], max[1][1], 'b*', label='Максимум ({:.4f}, {:.4f}), значение: {:.4f}'.format(max[1][0], max[1][1], max[2]), markersize=3)
+    ax.plot(max[1][0], max[1][1], 'r*', label='Максимум ({:.4f}, {:.4f}), значение: {:.4f}'.format(max[1][0], max[1][1], max[2]), markersize=3)
     
     if needVe:
         ive = ip.linear.ive(A, b)
@@ -76,14 +84,14 @@ def start_tol_plot(A, b, needVe=False):
     return max[2]
 
 
-def tol_plot(A, b, title, needVe=False):
+def tol_plot(A, b, title, filename, needVe=False):
     tol = start_tol_plot(A, b, needVe)
     plt.title(title)
     plt.legend()
     plt.grid()
     plt.xlim(-1, 5)
     plt.ylim(-0.5, 4)
-
+    save_figure(plt, filename)
     return tol
 
 
@@ -119,21 +127,21 @@ print(np.linalg.cond(midA))
 
 
 
-linear_system_plot(A, b, 'начальная ИСЛАУ')
-maxTol = tol_plot(A, b, 'Tol для начальной ИСЛАУ')
+linear_system_plot(A, b, 'начальная ИСЛАУ', 'islau.png')
+maxTol = tol_plot(A, b, 'Tol для начальной ИСЛАУ', 'Tol1.png')
 print("maxTol: {}\n".format(maxTol))
 
 K = 1
 bEvenCorrected = b_correction_even(b, K)
 print("Равномерное уширение b: {}".format(bEvenCorrected.data))
-maxTolBCorrected = tol_plot(A, bEvenCorrected, 'Tol для системы с равномерным уширением правой части', True)
+maxTolBCorrected = tol_plot(A, bEvenCorrected, 'Tol для системы с равномерным уширением правой части', 'even_right.png', True)
 print("maxTol для равномерного уширения: {}\n".format(maxTolBCorrected))
 
 K = 3
 weightsB = [0.5, 0.1, 1, 0.5]
 bUnevenCorrected = b_correction_uneven(b, K, weightsB)
 print("Неравномерное уширение b: {}".format(bUnevenCorrected.data))
-maxTolBCorrected = tol_plot(A, bUnevenCorrected, 'Tol для системы с неравномерным уширением правой части', True)
+maxTolBCorrected = tol_plot(A, bUnevenCorrected, 'Tol для системы с неравномерным уширением правой части', 'uneven_right.png', True)
 print("maxTol для неравномерного уширения: {}\n".format(maxTolBCorrected))
 
 K = 1
@@ -144,7 +152,7 @@ weightsA = np.ones((4, 2))
 ACorrected = A_correction(A, K, weightsA, E)
 print("Изначальная матрица A: \n{}\n".format(A.data))
 print("Скорректированная матрица A: \n{}".format(ACorrected.data))
-maxTolACorrected = tol_plot(ACorrected, b, 'Tol для системы со скорректированной левой частью', True)
+maxTolACorrected = tol_plot(ACorrected, b, 'Tol для системы со скорректированной левой частью', 'left.png', True)
 
 
 plt.show()
