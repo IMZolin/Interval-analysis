@@ -10,6 +10,8 @@
 \usepackage{amsmath}
 \usepackage{graphicx}
 \usepackage{float}
+\usepackage{tabularx}
+\usepackage{afterpage}
 
 \DeclareGraphicsExtensions{.png,.jpg}
 
@@ -185,6 +187,7 @@
 	\noindent На данном рисунке черный квадрат имеет сторону $2\cdot \mathrm{ive}$, а фиолетовый - $2\cdot \mathrm{rve}$. Область обведенная черной линией - допусковое множество\\
 	$\mathrm{ive}: 0.106272696 \;\;\;\mathrm{rve}: 0.69755409$
 	
+
 	\subsection{Достижение разрешимости за счёт коррекции левой части}
 	Для построения интервальной матрицы $\textbf{E}$ с уравновешанными интервальными элементами $\mathbf{e}_{ij}=[-e_{ij}, e_{ij}]$ выбираем такие $\mathbf{e}_{ij}$, что:
 	\begin{equation*}
@@ -205,33 +208,31 @@
 			0 & [-0.3, 0.3] \\
 		\end{pmatrix}
 	\end{equation}
-	\begin{figure}[H] \label{MatrixCorrSet}
+	\begin{figure}[H]
 		\centering
-		\includegraphics[width=0.7\textwidth]{../src/pic/left.png}
+		\includegraphics[width=0.6\textwidth]{../src/pic/left.png}
 		\caption{Допусковое множество решений со скоректированной матрицей} 
+		\label{fig:MatrixCorrSet}
 	\end{figure}
 	\noindent На данном рисунке черный квадрат имеет сторону $2\cdot \mathrm{ive}$, а фиолетовый - $2\cdot \mathrm{rve}. $ Область обведенная черной линией - допусковое множество\\
 	$\mathrm{ive}: 0.068321425 \;\;\;\mathrm{rve}: 0.3444088$
-	\begin{figure}[H] \label{MatrixCorrSet}
+	\begin{figure}[H]
 		\centering
 		\includegraphics[width=0.6\textwidth]{../src/pic/left_bliz.png}
 		\caption{Допусковое множество решений со скоректированной матрицей} 
+		\label{fig:MatrixCorrSetBliz}
 	\end{figure}
-	
 	\section{Сравнение}
 	\begin{center}
-		\begin{tabular}{|c|c|c|c|}
+		\begin{tabularx}{\textwidth}{|c|c|c|c|c|X|}  
 			\hline
-			Объект преобразования & argmax Tol & max Tol & Способ коррекции \\ \hline\hline
-			Правая часть & (2.80, 1.40) & 0.45 & Увеличим правой части с коэффициентом K=1.35 \\ \hline
-			Матрица & (3.29, 1.68) & 0.10 & Сужение матрицы с коэффициентом K=1.35\\ \hline
-			1-ая строка & (2.46, 1.23) & -0.73 & Сведение элементов строки в точечные интервалы \\ \hline
-			2-ая строка & (3.40, 1.07) & -0.77 & Сведение элементов строки в точечные интервалы \\ \hline
-			3-ая строка & (2.80, 1.40) & -0.73 & Сведение элементов строки в точечные интервалы \\ \hline
-			4-ая строка & (2.80, 1.40) & -0.90 & Сведение элементов строки в точечные интервалы \\ \hline
-		\end{tabular}
+			Объект преобразования & $\tau$ & max Tol & ive & rve & Способ коррекции \\ \hline\hline
+			Правая часть & (1.333,0.6667) & 0.667 & 0.1473502 & 0.726363348 & Равномерно увеличим правой части с коэффициентом K=1 \\ \hline
+			Правая часть & (0.96, 0.576) & 0.724 & 0.106272696 & 0.69755409& Неравномерно увеличим правой части с коэффициентом K=3\\ \hline
+			Матрица & (1.25, 0.75) & 0.25 & 0.068321425 & 0.3444088 & Сужение матрицы с коэффициентом K=1 \\ \hline
+		\end{tabularx}
 	\end{center}
-	
+
 	\section{Выводы}
 	\begin{enumerate}
 		\item После корекции правой части равномерным уширением вектора $\textbf{b}$ безусловный максимум распознающего функционала $Tol$ составляет 0.667 и находится в точке (1.333, 0.667). Заметим, что форма поверхности распознающего функционала $Tol$ не претерпела изменений.

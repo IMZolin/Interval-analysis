@@ -106,6 +106,9 @@ def A_correction(A, K, weights, E):
     mul = K * weights * E
     newA = A.a - mul.a
     newB = A.b - mul.b
+    print("New K", mul)
+    print("New A", newA)
+    print("New A", newB)
     return ip.Interval(newA, newB)
 
 
