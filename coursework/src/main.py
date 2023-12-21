@@ -6,7 +6,7 @@ from intvalpy.RealInterval import ARITHMETICS
 
 
 def f1(x, y):
-    return (x - 1.22) ** 2 + y ** 2 - 1
+    return (x - 1) ** 2 + y ** 2 - 1
 
 
 def f2(x, y):
@@ -14,7 +14,7 @@ def f2(x, y):
 
 
 def df1_x(x):
-    return 2 * (x - 1.22)
+    return 2 * (x - 1)
 
 
 def df1_y(y):
@@ -102,8 +102,8 @@ def print_int(X):
 
 
 if __name__ == "__main__":
-    midX = [1.08, 1.0]
-    radX = [0.2, 0.25]
+    midX = [1.1, 1.0]
+    radX = [0.3, 0.3]
 
     # midX = [1.25, 0.7]
     # radX = [0.45, 0.45]
@@ -119,26 +119,26 @@ if __name__ == "__main__":
                                 linewidth=1.2)
         plt.gca().add_patch(iveRect)
 
-    # for i in range(len(Kr)):
-    #     one = abs(Kr[i][0].b - Kr[i][0].a)
-    #     two = abs(Kr[i][1].b - Kr[i][1].a)
-    #     iveRect = plt.Rectangle((Kr[i][0].a, Kr[i][1].a), one, two, edgecolor='blue', facecolor='none', linewidth=1.2)
-    #     plt.gca().add_patch(iveRect)
+    for i in range(len(Kr)):
+        one = abs(Kr[i][0].b - Kr[i][0].a)
+        two = abs(Kr[i][1].b - Kr[i][1].a)
+        iveRect = plt.Rectangle((Kr[i][0].a, Kr[i][1].a), one, two, edgecolor='blue', facecolor='none', linewidth=1.2)
+        plt.gca().add_patch(iveRect)
 
     print("Кол-во итераций", i)
     plt.plot(midX[0], midX[1], 'b*', ms=4, label='start')
     print_int(X_k)
     x = np.arange(0, 2, 0.01)
-    y = np.sqrt(1 - pow(x - 1.22, 2))
-    plt.plot(x, y, '--m', linewidth=0.8, label=r'$\sqrt{1 - (x - 1.22)^2}$')
+    y = np.sqrt(1 - pow(x - 1.24, 2))
+    plt.plot(x, y, '--m', linewidth=0.8, label=r'$\sqrt{1 - (x - 1)^2}$')
     y = np.sqrt(x)
     plt.plot(x, y, 'g', linewidth=0.8, label=r'$\sqrt{x}$')
     plt.grid()
-    # plt.xlim(0, 2)
-    # plt.ylim(0, 2)
+    plt.xlim(0, 2)
+    plt.ylim(0, 2)
     # plt.xlim(0.8, 1.7)
     # plt.ylim(0.35, 1.05)
-    plt.xlim(0.88, 1.28)
-    plt.ylim(0.75, 1.25)
+    # plt.xlim(0.88, 1.28)
+    # plt.ylim(0.75, 1.25)
     plt.legend()
     plt.show()
