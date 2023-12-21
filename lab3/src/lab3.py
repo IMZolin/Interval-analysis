@@ -13,11 +13,11 @@ def create_L(X):
     radL[0][1] = (X.b[1]*2 - X.a[1]*2)/2
     midL[0][1] = X.a[1]*2 + radL[0][1]
 
-    radL[1][0] = (X.b[0]*2 - X.a[0]*2)/2
-    midL[1][0] = X.a[0]*2 + radL[0][0]
+    midL[1][0] = 1 
+    radL[1][0] = 0
 
-    midL[1][1] = -1 
-    radL[1][1] = 0
+    radL[1][1] = (X.b[1]*2 - X.a[1]*2)/2
+    midL[1][1] = -(X.a[1]*2 + radL[1][1])
     return ip.Interval(midL, radL, midRadQ=True)
 
 def inv_midL(L):
@@ -36,8 +36,8 @@ def eig_midL(L):
 
 def F_x(x):
     F = np.zeros(2)
-    F[0] = x[0]**2 + x[1]**2 -1
-    F[1] = x[0]**2 - x[1]
+    F[0] = x[0]**2 + x[1]**2 - 1
+    F[1] = x[0] - x[1]**2
     return F
 
 def kravchik(x_av, F, Lambda, I, X, L):
@@ -67,7 +67,7 @@ if __name__ == "__main__":
     X_k = []
     X_k.append(X)
     i = 0
-    print("Количевство итераций:", i , "\n", X_k[i][1], X_k[i][0], )
+    print("Количевство итераций:", i , "\n", X_k[i][0], X_k[i][1], )
     for i in range (1, 10):
         L = create_L(X)
         Lambda = inv_midL(L)
@@ -76,7 +76,7 @@ if __name__ == "__main__":
         F = F_x(x_av)
         kr = kravchik(x_av, F, Lambda, I, X, L)
         X_k.append(intersection(X, kr))
-        print("Количевство итераций:",i, "\n", X_k[i][1], X_k[i][0], )
+        print("Количевство итераций:",i, "\n", X_k[i][0], X_k[i][1], )
         X = X_k[i]
     
     fig, ax = plt.subplots(figsize=(4, 4))
@@ -85,25 +85,15 @@ if __name__ == "__main__":
     for i in range(10):
         one = abs(X_k[i][0].b - X_k[i][0].a)
         two = abs(X_k[i][1].b - X_k[i][1].a)
-        print(one, two)
-        iveRect = plt.Rectangle((X_k[i][1].a, X_k[i][0].a),two , one, edgecolor='black', facecolor='none', label='Брус ive', linewidth=1.5)
+        iveRect = plt.Rectangle((X_k[i][0].a, X_k[i][1].a), one , two, edgecolor='black', facecolor='none', label='Брус ive', linewidth=1.5)
         plt.gca().add_patch(iveRect)
     x = np.arange(-2, 3.01, 0.01)
     y = np.sqrt(1 - pow(x, 2))
-    plt.plot(x, y, '--m', linewidth=0.7)
+    plt.plot(x, y, '--', linewidth=0.7)
     y = np.sqrt(x)
-    plt.plot(x, y, 'g', linewidth=0.7)
+    plt.plot(x, y, linewidth=0.7)
     plt.grid()
     plt.xlim(0, 1)
     plt.ylim(0, 1)
     plt.show()
-
-
-    x = -0.5 + np.sqrt(1.25)
-    y = np.sqrt(x)
-    print("{}".format(abs(X_k[9][0].a - y)), "{}".format(abs(X_k[9][1].a - x)))
-    print("{}".format(abs(X_k[9][0].b - y)), "{}".format(abs(X_k[9][1].b - x)))
-    # for i in range(10):
-        # print("{}".format(abs(X_k[i][0].a - y)), "{}".format(abs(X_k[i][1].a - x)))
-
     
